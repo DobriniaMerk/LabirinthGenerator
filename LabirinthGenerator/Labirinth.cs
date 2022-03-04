@@ -11,9 +11,10 @@ namespace LabirinthGenerator
     class Labirinth
     {
         Cell[,] cells;
-        Vector2i[] dirs = { new Vector2i(0, -1), new Vector2i(1, 0), new Vector2i(0, 1), new Vector2i(-1, 0) };
+        
         Random random = new Random();
         int width, height;
+        int t = 0;
 
         public Labirinth(int _width, int _height)
         {
@@ -23,6 +24,8 @@ namespace LabirinthGenerator
             for (int w = 0; w < width; w++)
                 for (int h = 0; h < height; h++)
                     cells[w, h] = new Cell(w, h);
+            cells[0, 0].exits[0] = 1;
+            Generate(0, 0);
         }
 
         public void Generate(int x, int y)
@@ -31,7 +34,7 @@ namespace LabirinthGenerator
             Vector2i ext;
             while (exit > 0)
             {
-                ext = dirs[exit];
+                ext = Cell.dirs[exit];
                 cells[x, y].exits[exit] = 1;
                 cells[x + ext.X, y + ext.Y].exits[(exit + 2) % 4] = 1;
 
@@ -39,6 +42,7 @@ namespace LabirinthGenerator
 
                 exit = RandomExit(cells[x, y]);
             }
+            Console.WriteLine(++t);
         }
 
         int RandomExit(Cell cell)
@@ -50,7 +54,7 @@ namespace LabirinthGenerator
                 int r = t[random.Next(t.Count)];
                 try
                 {
-                    Cell c = cells[(dirs[r].X + cell.position.X), (dirs[r].Y + cell.position.Y)];
+                    Cell c = cells[(Cell.dirs[r].X + cell.position.X), (Cell.dirs[r].Y + cell.position.Y)];
                     if (c.IsEmpty())
                         return r;
                     else
@@ -82,7 +86,7 @@ namespace LabirinthGenerator
             {
                 for (int w = 0; w < width; w++)
                 {
-                    cells[w, h].Draw(rw);
+                    cells[w, h].Draw(rw, new Vector2f(w * rw.Size.X / width, h * rw.Size.Y / height) , rw.Size.X / width, rw.Size.Y / height);
                 }
             }
         }
