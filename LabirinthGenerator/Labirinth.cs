@@ -8,13 +8,15 @@ using SFML.Graphics;
 
 namespace LabirinthGenerator
 {
-    class Labirinth
+    public class Labirinth
     {
         Cell[,] cells;
         
-        Random random = new Random();
+        public static Random random = new Random();
         int width, height;
         int t = 0;
+        List<Cell> stack = new List<Cell>();
+        Cell startCell;
 
         public Labirinth(int _width, int _height)
         {
@@ -25,10 +27,12 @@ namespace LabirinthGenerator
                 for (int h = 0; h < height; h++)
                     cells[w, h] = new Cell(w, h);
             cells[0, 0].exits[0] = 1;
-            Generate(0, 0);
+
+            startCell = cells[0, 0];
+            stack.Add(startCell);
         }
 
-        public void Generate(int x, int y)
+        public void GenerateRec(int x, int y)
         {
             int exit = RandomExit(cells[x, y]);
             Vector2i ext;
@@ -38,12 +42,33 @@ namespace LabirinthGenerator
                 cells[x, y].exits[exit] = 1;
                 cells[x + ext.X, y + ext.Y].exits[(exit + 2) % 4] = 1;
 
-                Generate(x + ext.X, y + ext.Y);
+                GenerateRec(x + ext.X, y + ext.Y);
 
                 exit = RandomExit(cells[x, y]);
             }
             Console.WriteLine(++t);
         }
+
+
+        public void GenerateStep()
+        {
+            Cell cell = stack.Last();
+            int exit = RandomExit(cell);
+
+            if (RandomExit(cell) == -1)
+            {
+                // no neighbours
+                // do stuff
+                stack.Remove(cell);
+                return;
+            }
+            // else
+            Vector2i ext = Cell.dirs[exit];
+            cell.exits[exit] = 1;
+            cells[cell.position.X + ext.X, cell.position.Y + ext.Y].exits[(exit + 2) % 4] = 1;
+            stack.Add(cells[cell.position.X + ext.X, cell.position.Y + ext.Y]);
+        }
+
 
         int RandomExit(Cell cell)
         {
@@ -68,6 +93,7 @@ namespace LabirinthGenerator
             return -1;
         }
 
+
         public void DrawConsole()
         {
             for(int h = 0; h < height; h++)
@@ -89,6 +115,14 @@ namespace LabirinthGenerator
                     cells[w, h].Draw(rw, new Vector2f(w * rw.Size.X / width, h * rw.Size.Y / height) , rw.Size.X / width, rw.Size.Y / height);
                 }
             }
+        }
+
+
+        public void SetStartCell(int x, int y)
+        {
+            startCell = cells[x, y];
+            stack.Clear();
+            stack.Add(startCell);
         }
     }
 }
