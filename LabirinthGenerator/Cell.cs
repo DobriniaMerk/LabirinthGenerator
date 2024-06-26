@@ -39,16 +39,11 @@ namespace LabirinthGenerator
                 pointCount++;
             uint t = 0;
             ConvexShape shape = new ConvexShape(pointCount);
-            RectangleShape rect = new RectangleShape();
+            
             shape.Position = position;
             shape.FillColor = new Color(250, 240, 136);
             shape.OutlineThickness = 0;
             
-            rect.Position = position;
-            rect.Size = new Vector2f(width, height);
-            rect.OutlineThickness = 1;
-            rect.FillColor = Color.Black;
-
             if (Enumerable.SequenceEqual(exits, emptyExits))
                 return;
             
@@ -83,7 +78,6 @@ namespace LabirinthGenerator
                 shape.SetPoint(t, tipPos);
             }
 
-            rw.Draw(rect);
             rw.Draw(shape);
         }
         

@@ -109,13 +109,26 @@ namespace LabirinthGenerator
             }
         }
 
-        public void Draw(RenderWindow rw)
+        public void Draw(RenderWindow rw, bool drawGrid = false)
         {
             for (int h = 0; h < height; h++)
             {
                 for (int w = 0; w < width; w++)
                 {
-                    cells[w, h].Draw(rw, new Vector2f(w * rw.Size.X / width, h * rw.Size.Y / height) , rw.Size.X / width, rw.Size.Y / height);
+                    Vector2f position = new Vector2f(w * rw.Size.X / width, h * rw.Size.Y / height);
+                    cells[w, h].Draw(rw, position, rw.Size.X / width, rw.Size.Y / height);
+                    
+                    if(drawGrid)
+                    {
+                        RectangleShape rect = new RectangleShape();
+
+                        rect.Position = position;
+                        rect.Size = new Vector2f(rw.Size.X / width, rw.Size.Y / height);
+                        rect.OutlineThickness = 1;
+                        rect.FillColor = Color.Black;
+
+                        rw.Draw(rect);
+                    }
                 }
             }
         }
