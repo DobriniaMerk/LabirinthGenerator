@@ -13,7 +13,7 @@ namespace LabirinthGenerator
         Cell[,] cells;
         
         public static Random random = new Random();
-        int width, height;
+        public int width, height;
         int t = 0;
         List<Cell> stack = new List<Cell>();
         Cell startCell;
@@ -116,8 +116,7 @@ namespace LabirinthGenerator
                 for (int w = 0; w < width; w++)
                 {
                     Vector2f position = new Vector2f(w * rw.Size.X / width, h * rw.Size.Y / height);
-                    cells[w, h].Draw(rw, position, rw.Size.X / width, rw.Size.Y / height);
-                    
+
                     if(drawGrid)
                     {
                         RectangleShape rect = new RectangleShape();
@@ -129,6 +128,9 @@ namespace LabirinthGenerator
 
                         rw.Draw(rect);
                     }
+
+                    cells[w, h].Draw(rw, position, rw.Size.X / width, rw.Size.Y / height);
+                    
                 }
             }
         }
