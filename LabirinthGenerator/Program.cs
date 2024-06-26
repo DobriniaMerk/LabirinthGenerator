@@ -35,6 +35,7 @@ void OnKey(object sender, KeyEventArgs e)
             break;
         case Keyboard.Key.R:
             l = new Labirinth(l.width, l.height);
+            done = false;
             break;
     }
 }
