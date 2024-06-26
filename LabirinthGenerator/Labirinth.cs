@@ -50,23 +50,26 @@ namespace LabirinthGenerator
         }
 
 
-        public void GenerateStep()
+        public bool GenerateStep()
         {
+            if (stack.Count == 0)
+                return true;
+
             Cell cell = stack.Last();
             int exit = RandomExit(cell);
 
             if (RandomExit(cell) == -1)
             {
                 // no neighbours
-                // do stuff
                 stack.Remove(cell);
-                return;
+                return false;
             }
             // else
             Vector2i ext = Cell.dirs[exit];
             cell.exits[exit] = 1;
             cells[cell.position.X + ext.X, cell.position.Y + ext.Y].exits[(exit + 2) % 4] = 1;
             stack.Add(cells[cell.position.X + ext.X, cell.position.Y + ext.Y]);
+            return false;
         }
 
 

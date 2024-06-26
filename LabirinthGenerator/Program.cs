@@ -10,13 +10,14 @@ RenderWindow rw = new RenderWindow(vm, "Labirinth", Styles.Close, new ContextSet
 Labirinth l = new Labirinth(30, 30);
 
 rw.Closed += OnClose;
-
+bool done = false;
 
 while (rw.IsOpen)
 {
     rw.DispatchEvents();
     rw.Clear();
-    l.GenerateStep();
+    if(!done)
+        done = l.GenerateStep();
     l.Draw(rw);
     rw.Display();
 }
